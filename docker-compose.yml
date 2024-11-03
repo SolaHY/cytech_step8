@@ -11,7 +11,7 @@ services:
         ports:
             - '${APP_PORT:-80}:80'
             - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
-            - "2525:2525"  # 必要に応じてMailtrap用のポートを追加
+            - "2525:2525"  #Mailtrap用
         environment:
             WWWUSER: '${WWWUSER}'
             LARAVEL_SAIL: 1
