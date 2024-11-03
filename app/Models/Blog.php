@@ -30,4 +30,14 @@ class Blog extends Model
         // 現在の投稿に関する「いいね」のリレーションを返却する。
         return $this->likes()->where('user_id', $user->id)->exists();
     }
+
+    // ログインユーザのブログを取得
+    public function getOwnBlog($user_id)
+    {
+        // blogsテーブルのデータで$user_id（ログインユーザID）とイコールのデータを取得
+        $blogs = $this->where('user_id', $user_id)->get();
+
+        // 取得したブログを返却
+        return $blogs;
+    }
 }

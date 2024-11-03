@@ -5,17 +5,23 @@ namespace App\Http\Controllers;
 use App\Models\Blog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
+
 
 class BlogController extends Controller
 {
+    // コンストラクタ
+    public function __construct(
+        private Blog $blog = new Blog,
+    ) {}
+
     // マイページ画面表示
     public function mypage()
     {
-        // ログインユーザーのブログを取得し、ユーザー情報を一緒に取得
-        $blogs = Blog::with('user')
-            ->where('user_id', '=', auth()->id())  // ログインユーザーの投稿に限定
-            ->get();
-
+        // ログインユーザIDを取得
+        $user_id = Auth::id();
+        // モデルで自身のブログを取得する
+        $blogs = $this->blog->getOwnBlog($user_id);
         // ビューにデータを渡す
         return view('mypage', compact('blogs'));
     }
