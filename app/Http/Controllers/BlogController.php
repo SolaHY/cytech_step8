@@ -6,6 +6,7 @@ use App\Models\Blog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\BlogRequest;
 
 
 class BlogController extends Controller
@@ -45,7 +46,7 @@ class BlogController extends Controller
     }
 
     // 投稿データを保存
-    public function store(Request $request)
+    public function store(BlogRequest $request)
     {
         // バリデーション
         $validatedData = $request->validate([
@@ -118,17 +119,24 @@ class BlogController extends Controller
     public function search(Request $request)
     {
         $query = Blog::query();
+        // タイトルの入力欄に入力された値を変数に代入
+        $titleSearch = $request->input('title');
+        // 日付の入力欄に入力された値を変数に代入
+        $dateSearch = $request->input('created_at');
 
+        // 検索するタイトルキーワードが入力された場合
         if ($request->filled('title')) {
-            $query->where('title', 'like', '%' . $request->input('title') . '%');
+            // 部分一致条件追加して検索
+            $query->where('title', 'like', '%' . $titleSearch . '%');
         }
 
+        // 検索する日付が入力された場合
         if ($request->filled('created_at')) {
-            $query->whereDate('created_at', $request->input('created_at'));
+            // 一致条件追加して検索
+            $query->whereDate('created_at', $dateSearch);
         }
 
         $blogs = $query->get();
-
         return view('index', compact('blogs'));
     }
 
