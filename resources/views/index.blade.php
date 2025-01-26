@@ -5,11 +5,9 @@
 @section('content')
 <div class="container">
     <h1>ブログ一覧</h1>
-
     <div class="d-flex mb-3">
         <a href="{{ route('mypage') }}" class="mb-3 ms-auto">マイページ</a>
     </div>
-
     <form action="{{ route('search') }}" method="GET" class="my-3">
         <div class="row align-items-center">
             <div class="col-4">
@@ -23,7 +21,6 @@
             </div>
         </div>
     </form>
-
     <table border="1" class="table">
         <thead>
             <tr>
@@ -60,7 +57,6 @@
             @endforelse
         </tbody>
     </table>
-
 </div>
 <div class="text-center mt-5">
     <!-- 問い合わせフォームへのリンクを追加 -->

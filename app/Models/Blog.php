@@ -40,4 +40,15 @@ class Blog extends Model
         // 取得したブログを返却
         return $blogs;
     }
+
+    // ログインユーザ以外のブログを取得
+    public function getOtherBlog($user_id)
+    {
+        // blogsテーブルのデータで$user_idがログインユーザIDと異なるデータを取得
+        $blogs = Blog::where('user_id', '!=', $user_id) // ログインユーザー以外のブログを取得
+            ->with('user') // usersテーブルのデータをリレーションで取得
+            ->get();
+        // 取得したブログを返却
+        return $blogs;
+    }
 }

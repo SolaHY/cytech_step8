@@ -4,13 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Blog;
 use App\Models\Like;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class LikeController extends Controller
 {
     // ①イイねを追加する処理
-    public function likeBlog(Request $request, Blog $blog)
+    public function likeBlog(Blog $blog)
     {
         $user = Auth::user(); // 現在ログインしているユーザーを取得
 
@@ -30,7 +29,7 @@ class LikeController extends Controller
     }
 
     // ②イイねを削除する処理
-    public function unlikeBlog(Request $request, Blog $blog)
+    public function unlikeBlog(Blog $blog)
     {
         $user = Auth::user(); // 現在ログインしているユーザーを取得
 

@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\BlogRequest;
 
-
 class BlogController extends Controller
 {
     // コンストラクタ
@@ -30,10 +29,11 @@ class BlogController extends Controller
     // 一覧画面表示
     public function index()
     {
+        // ログインユーザIDを取得
+        $user_id = Auth::id();
+
         // ログインユーザー以外のブログを取得し、ユーザー情報を一緒に取得
-        $blogs = Blog::with('user')
-            ->where('user_id', '!=', auth()->id())  // ログインユーザーの投稿を除外
-            ->get();
+        $blogs = $this->blog->getOtherBlog($user_id);
 
         // ビューにデータを渡す
         return view('index', compact('blogs'));

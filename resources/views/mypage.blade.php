@@ -5,12 +5,10 @@
 @section('content')
 <div class="container">
     <h1>マイページ</h1>
-
     <div class="d-flex mb-3">
         <a href="{{ route('create') }}" class="btn btn-success mb-3">新規投稿</a>
         <a href="{{ route('index') }}" class="ms-auto">他の人の投稿</a>
     </div>
-
     <form action="{{ route('search') }}" method="GET" class="my-3">
         <div class="row align-items-center">
             <div class="col-4">
@@ -24,7 +22,6 @@
             </div>
         </div>
     </form>
-
     <table border="1" class="table">
         <thead>
             <tr>
@@ -51,13 +48,11 @@
                 <td>{{ $blog->created_at->format('Y-m-d') }}</td>
                 <td>
                     <a href="{{ route('detail', $blog->id) }}" class="btn btn-primary">詳細</a>
-
                     <form action="{{ route('destroy', $blog->id) }}" method="POST" style="display:inline-block;">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-danger" onclick="return confirm('本当に削除しますか？');">削除</button>
                     </form>
-
                 </td>
             </tr>
             @empty
@@ -67,6 +62,5 @@
             @endforelse
         </tbody>
     </table>
-
 </div>
 @endsection

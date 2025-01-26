@@ -20,8 +20,6 @@
         <img src="{{ asset('storage/' . $blog->image) }}" alt="{{ $blog->title }}" class="img-fluid">
         @endif
         <p>{{ $blog->created_at->format('Y-m-d') }}</p>
-
-
         <!-- イイねボタン -->
         <div class="mb-3">
             <button id="like-btn" class="border-0 bg-transparent"
@@ -31,7 +29,6 @@
             </button>
             <span id="like-count">{{ $blog->likes()->count() }}</span>
         </div>
-
         <!-- ブログの投稿者の場合、更新ボタンと削除ボタンを表示する -->
         @if(auth()->check() && auth()->user()->id === $blog->user_id)
         <a href="{{ route('edit', $blog->id) }}" class="btn btn-primary">更新する</a>
@@ -41,9 +38,7 @@
             <button type="submit" class="btn btn-danger" onclick="return confirm('本当に削除しますか？');">削除する</button>
         </form>
         @endif
-
         <a href="{{ route('index') }}" class="btn btn-secondary">一覧に戻る</a>
-
     </div>
 </div>
 @endsection
