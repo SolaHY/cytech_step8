@@ -11,7 +11,6 @@
 <body>
     <h1>はじめてのView</h1>
     <p>Viewファイルを利用してHTMLの文字列を返すと、ルーティングのファイル(web.php)がシンプルになります。</p>
-
     <ul>
         @foreach($samples as $sample)
         <li>
@@ -19,7 +18,6 @@
         </li>
         @endforeach
     </ul>
-
 </body>
 
 </html>

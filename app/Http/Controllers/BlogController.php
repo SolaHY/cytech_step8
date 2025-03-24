@@ -8,15 +8,14 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\BlogRequest;
 
-
 class BlogController extends Controller
 {
-    // コンストラクタ
+    // コンストラクタ：Blogモデルのインスタンスを注入
     public function __construct(
         private Blog $blog = new Blog,
     ) {}
 
-    // マイページ画面表示
+    // マイページ画面表示：ログインユーザーの投稿一覧を表示
     public function mypage()
     {
         // ログインユーザIDを取得
@@ -27,13 +26,14 @@ class BlogController extends Controller
         return view('mypage', compact('blogs'));
     }
 
-    // 一覧画面表示
+    // 一覧画面表示：他のユーザーの投稿一覧を表示
     public function index()
     {
+        // ログインユーザIDを取得
+        $user_id = Auth::id();
+
         // ログインユーザー以外のブログを取得し、ユーザー情報を一緒に取得
-        $blogs = Blog::with('user')
-            ->where('user_id', '!=', auth()->id())  // ログインユーザーの投稿を除外
-            ->get();
+        $blogs = $this->blog->getOtherBlog($user_id);
 
         // ビューにデータを渡す
         return view('index', compact('blogs'));
@@ -45,15 +45,11 @@ class BlogController extends Controller
         return view('create');
     }
 
-    // 投稿データを保存
+    // 投稿データを保存：バリデーションと画像アップロード処理を含む
     public function store(BlogRequest $request)
     {
-        // バリデーション
-        $validatedData = $request->validate([
-            'title' => 'required|max:255',
-            'content' => 'required',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+        // バリデーション済みのデータを取得
+        $validatedData = $request->validated();
 
         // 画像ファイルの処理
         if ($request->hasFile('image')) {
@@ -70,7 +66,7 @@ class BlogController extends Controller
         return redirect()->route('index')->with('success', 'ブログが投稿されました');
     }
 
-    // 詳細画面を表示
+    // 詳細画面を表示：ブログの詳細情報と投稿者情報を表示
     public function show($id)
     {
         // 指定されたIDのブログ投稿と投稿者の情報を取得
@@ -78,25 +74,22 @@ class BlogController extends Controller
         return view('detail', compact('blog'));
     }
 
-    // 更新画面の表示
+    // 更新画面の表示：既存のブログデータを編集フォームに表示
     public function edit($id)
     {
         $blog = Blog::findOrFail($id);
         return view('edit', compact('blog'));
     }
 
-    // 更新処理
-    public function update(Request $request, $id)
+    // 更新処理：バリデーションと画像更新処理を含む
+    public function update(BlogRequest $request, $id)
     {
-        $request->validate([
-            'title' => 'required|max:255',
-            'content' => 'required',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+        // バリデーション済みのデータを取得
+        $validatedData = $request->validated();
 
         $blog = Blog::findOrFail($id);
-        $blog->title = $request->input('title');
-        $blog->content = $request->input('content');
+        $blog->title = $validatedData['title'];
+        $blog->content = $validatedData['content'];
 
         // 画像がアップロードされた場合
         if ($request->hasFile('image')) {
@@ -116,6 +109,7 @@ class BlogController extends Controller
             ->with('success', '記事が更新されました');
     }
 
+    // 検索機能：タイトルと日付でブログを検索
     public function search(Request $request)
     {
         $query = Blog::query();
@@ -140,6 +134,7 @@ class BlogController extends Controller
         return view('index', compact('blogs'));
     }
 
+    // 削除処理：ブログ記事を削除
     public function destroy($id)
     {
         $blog = Blog::findOrFail($id);
